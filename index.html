@@ -6,6 +6,7 @@
     <meta name="theme-color" content="#fff8e7" />
     <title>Grundschulquiz – Schlaukopf-Quiz</title>
     <link rel="stylesheet" href="style.css" />
+    <script src="questions.js" defer></script>
     <script src="script.js" defer></script>
   </head>
   <body>
@@ -15,40 +16,35 @@
           <div class="brand-mark" aria-hidden="true">⭐</div>
           <p class="eyebrow">Lernen macht Spaß!</p>
           <h1>Schlaukopf-Quiz</h1>
-          <p class="intro">Lege ein Profil an und starte das Quiz direkt dort.</p>
+          <p class="intro">Trage deinen Namen ein und starte dein Quiz.</p>
         </header>
 
-        <div class="panel create-profile-panel">
-          <label class="input-label" for="player-name">Neues Profil</label>
-          <div class="input-row">
-            <input id="player-name" class="player-input" type="text" maxlength="18" placeholder="Zum Beispiel: Mia" />
-            <button id="create-profile-btn" class="primary-button compact-button" type="button">Profil anlegen</button>
-          </div>
-          <p id="profile-message" class="profile-message" role="status" aria-live="polite"></p>
+        <div class="panel">
+          <label class="input-label" for="player-name">Name</label>
+          <input id="player-name" class="player-input" type="text" maxlength="18" placeholder="Zum Beispiel: Mia" />
+          <button id="start-btn" class="primary-button" type="button">Quiz starten</button>
         </div>
 
-        <div id="profiles-list" class="profiles-list" aria-live="polite"></div>
-
-        <!-- Compatibility controls used by the existing quiz engine. -->
-        <div class="legacy-controls" aria-hidden="true">
-          <button id="start-btn" type="button">Quiz starten</button>
-          <button id="logout-btn" type="button">Abmelden</button>
-          <span id="profile-name">-</span>
-          <span id="profile-streak">0</span>
-          <span id="profile-rounds">0</span>
-          <span id="profile-last-result">0/10</span>
+        <div class="profile-box" id="player-profile-box">
+          <div class="profile-header">
+            <span>Profil</span>
+            <button id="logout-btn" class="text-button" type="button">Abmelden</button>
+          </div>
+          <div class="profile-grid">
+            <div class="stat-item"><span class="stat-label">Name</span><strong id="profile-name">-</strong></div>
+            <div class="stat-item"><span class="stat-label">Streak</span><strong id="profile-streak">0</strong></div>
+            <div class="stat-item"><span class="stat-label">Runden</span><strong id="profile-rounds">0</strong></div>
+            <div class="stat-item"><span class="stat-label">Bestes Ergebnis</span><strong id="profile-best">0/10</strong></div>
+          </div>
+          <button id="reset-stats-btn" class="secondary-button" type="button">Statistik zurücksetzen</button>
+          <button id="delete-profile-btn" class="secondary-button" type="button">Profil löschen</button>
         </div>
       </section>
 
       <section id="quiz-screen" class="screen hidden">
         <div class="quiz-card" id="quiz-card" aria-labelledby="question">
-          <div class="quiz-topline">
-            <span class="category" id="category">Allgemeinwissen</span>
-            <span class="progress" id="progress">Frage 1 von 10</span>
-          </div>
-          <div class="progress-track" aria-hidden="true">
-            <div class="progress-fill" id="progress-fill"></div>
-          </div>
+          <div class="quiz-topline"><span class="category" id="category">Allgemeinwissen</span><span class="progress" id="progress">Frage 1 von 10</span></div>
+          <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progress-fill"></div></div>
           <h2 id="question" tabindex="-1">Die Frage wird geladen …</h2>
           <p class="instruction" id="instruction">Wähle die richtige Antwort aus:</p>
           <div class="answers" id="answers" role="group" aria-labelledby="question"></div>
@@ -71,174 +67,44 @@
     </main>
 
     <script>
-      (() => {
-        const PROFILES_KEY = "grundschulquiz-profiles";
-        const LEGACY_KEY = "grundschulquiz-profile";
-        const originalSetItem = Storage.prototype.setItem;
-        let activeProfileId = null;
-
-        function defaultProfile(name = "") {
-          return { id: (globalThis.crypto?.randomUUID?.() || `profile-${Date.now()}-${Math.random().toString(16).slice(2)}`), name, streak: 0, lastPlayedDate: "", totalRounds: 0, lastResult: 0 };
+      document.querySelector("#home-btn").addEventListener("click", () => {
+        document.querySelector("#result-screen").classList.remove("active");
+        document.querySelector("#result-screen").classList.add("hidden");
+        document.querySelector("#welcome-screen").classList.remove("hidden");
+        document.querySelector("#welcome-screen").classList.add("active");
+        document.querySelector("#player-name").focus();
+      });
+      document.querySelector("#reset-stats-btn").addEventListener("click", () => {
+        if (!window.confirm("Möchtest du wirklich alle Statistiken dieses Profils zurücksetzen? Der Profilname bleibt erhalten.")) return;
+        try {
+          const key = "grundschulquiz-profile";
+          const profile = JSON.parse(localStorage.getItem(key) || "{}");
+          profile.streak = 0;
+          profile.lastPlayedDate = "";
+          profile.totalRounds = 0;
+          profile.bestScore = 0;
+          profile.lastResult = 0;
+          localStorage.setItem(key, JSON.stringify(profile));
+          document.querySelector("#profile-streak").textContent = "0";
+          document.querySelector("#profile-rounds").textContent = "0";
+          document.querySelector("#profile-best").textContent = "0/10";
+        } catch (error) {
+          window.alert("Die Statistik konnte nicht zurückgesetzt werden. Bitte prüfe, ob der Browser lokales Speichern erlaubt.");
         }
-
-        function readProfiles() {
-          try {
-            const parsed = JSON.parse(localStorage.getItem(PROFILES_KEY) || "[]");
-            return Array.isArray(parsed) ? parsed : [];
-          } catch (error) {
-            return [];
-          }
+      });
+      document.querySelector("#delete-profile-btn").addEventListener("click", () => {
+        if (!window.confirm("Möchtest du dieses Profil wirklich löschen? Name und alle Statistiken werden entfernt.")) return;
+        try {
+          localStorage.removeItem("grundschulquiz-profile");
+          document.querySelector("#profile-name").textContent = "-";
+          document.querySelector("#profile-streak").textContent = "0";
+          document.querySelector("#profile-rounds").textContent = "0";
+          document.querySelector("#profile-best").textContent = "0/10";
+          document.querySelector("#player-name").value = "";
+        } catch (error) {
+          window.alert("Das Profil konnte nicht gelöscht werden. Bitte prüfe, ob der Browser lokales Speichern erlaubt.");
         }
-
-        function writeProfiles(profiles) {
-          originalSetItem.call(localStorage, PROFILES_KEY, JSON.stringify(profiles));
-        }
-
-        function renderProfiles() {
-          const list = document.querySelector("#profiles-list");
-          const profiles = readProfiles();
-          list.replaceChildren();
-          if (profiles.length === 0) {
-            const empty = document.createElement("p");
-            empty.className = "empty-profiles";
-            empty.textContent = "Noch keine Profile angelegt.";
-            list.append(empty);
-            return;
-          }
-
-          profiles.forEach((profile) => {
-            const card = document.createElement("article");
-            card.className = "profile-card";
-            const title = document.createElement("h2");
-            title.className = "profile-card-title";
-            title.textContent = profile.name;
-            const stats = document.createElement("div");
-            stats.className = "profile-grid";
-            const statData = [
-              ["Streak", String(profile.streak || 0)],
-              ["Runden", String(profile.totalRounds || 0)],
-              ["Letztes Ergebnis", `${profile.lastResult ?? 0}/10`]
-            ];
-            statData.forEach(([label, value]) => {
-              const stat = document.createElement("div");
-              stat.className = "stat-item";
-              const statLabel = document.createElement("span");
-              statLabel.className = "stat-label";
-              statLabel.textContent = label;
-              const statValue = document.createElement("strong");
-              statValue.textContent = value;
-              stat.append(statLabel, statValue);
-              stats.append(stat);
-            });
-
-            const start = document.createElement("button");
-            start.className = "primary-button profile-start-button";
-            start.type = "button";
-            start.textContent = "Quiz starten";
-            start.addEventListener("click", () => {
-              activeProfileId = profile.id;
-              originalSetItem.call(localStorage, LEGACY_KEY, JSON.stringify(profile));
-              document.querySelector("#player-name").value = profile.name;
-              document.querySelector("#start-btn").click();
-            });
-
-            const actions = document.createElement("div");
-            actions.className = "profile-actions";
-            const reset = document.createElement("button");
-            reset.className = "secondary-button";
-            reset.type = "button";
-            reset.textContent = "Statistik zurücksetzen";
-            reset.addEventListener("click", () => {
-              if (!window.confirm(`Möchtest du die Statistik von ${profile.name} zurücksetzen?`)) return;
-              const updated = readProfiles().map((item) => item.id === profile.id
-                ? { ...item, streak: 0, lastPlayedDate: "", totalRounds: 0, lastResult: 0 }
-                : item);
-              writeProfiles(updated);
-              if (activeProfileId === profile.id) {
-                const selected = updated.find((item) => item.id === profile.id);
-                originalSetItem.call(localStorage, LEGACY_KEY, JSON.stringify(selected));
-              }
-              renderProfiles();
-            });
-
-            const remove = document.createElement("button");
-            remove.className = "secondary-button delete-profile-button";
-            remove.type = "button";
-            remove.textContent = "Profil löschen";
-            remove.addEventListener("click", () => {
-              if (!window.confirm(`Möchtest du das Profil ${profile.name} wirklich löschen?`)) return;
-              writeProfiles(readProfiles().filter((item) => item.id !== profile.id));
-              if (activeProfileId === profile.id) activeProfileId = null;
-              renderProfiles();
-            });
-            actions.append(reset, remove);
-            card.append(title, stats, start, actions);
-            list.append(card);
-          });
-        }
-
-        // The quiz engine writes the active player's current stats to the legacy key.
-        // Mirror those writes into the selected profile so each profile keeps its own history.
-        Storage.prototype.setItem = function(key, value) {
-          originalSetItem.call(this, key, value);
-          if (key !== LEGACY_KEY || !activeProfileId) return;
-          try {
-            const updatedProfile = JSON.parse(value);
-            const profiles = readProfiles();
-            const index = profiles.findIndex((profile) => profile.id === activeProfileId);
-            if (index !== -1) {
-              profiles[index] = { ...profiles[index], ...updatedProfile, id: activeProfileId };
-              writeProfiles(profiles);
-              renderProfiles();
-            }
-          } catch (error) {
-            // Ignore malformed profile data; the quiz engine handles its own storage errors.
-          }
-        };
-
-        document.querySelector("#create-profile-btn").addEventListener("click", () => {
-          const input = document.querySelector("#player-name");
-          const name = input.value.trim();
-          const message = document.querySelector("#profile-message");
-          if (!name) {
-            message.textContent = "Bitte gib zuerst einen Namen ein.";
-            input.focus();
-            return;
-          }
-          const profiles = readProfiles();
-          if (profiles.some((profile) => profile.name.toLocaleLowerCase() === name.toLocaleLowerCase())) {
-            message.textContent = "Dieses Profil gibt es bereits.";
-            return;
-          }
-          profiles.push(defaultProfile(name));
-          writeProfiles(profiles);
-          input.value = "";
-          message.textContent = `Profil „${name}“ wurde angelegt.`;
-          renderProfiles();
-        });
-
-        document.querySelector("#home-btn").addEventListener("click", () => {
-          document.querySelector("#result-screen").classList.remove("active");
-          document.querySelector("#result-screen").classList.add("hidden");
-          document.querySelector("#welcome-screen").classList.remove("hidden");
-          document.querySelector("#welcome-screen").classList.add("active");
-          document.querySelector("#player-name").focus();
-        });
-
-        // Migrate an existing single profile once, retaining its saved stats.
-        if (readProfiles().length === 0) {
-          try {
-            const legacy = JSON.parse(localStorage.getItem(LEGACY_KEY) || "null");
-            if (legacy && legacy.name) {
-              const migrated = { ...defaultProfile(legacy.name), ...legacy };
-              writeProfiles([migrated]);
-            }
-          } catch (error) {
-            // Start with an empty profile list when old data is invalid.
-          }
-        }
-        renderProfiles();
-      })();
+      });
     </script>
   </body>
 </html>
