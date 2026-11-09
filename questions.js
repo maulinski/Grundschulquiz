@@ -196,5 +196,7 @@ window.questionPool = [
   { category: "Sport", question: "Welcher Sport wird mit einem Paddel und einem kleinen Boot gemacht?", answers: ["Kajakfahren", "Golf", "Basketball", "Tennis"], correct: 0 },
   { category: "Unterhaltung", question: "Wer ist der grüne Ninja?", answers: ["Kai", "Zane", "Jay", "Lloyd"], correct: 3 },
   { category: "Unterhaltung", question: "Wie heißt der Bruder von Feuerwehrmann Sam?", answers: ["Joe", "Trevor", "Charlie", "Mike"], correct: 2 },
-  { category: "Unterhaltung", question: "Welche Farbe hat die Mütze von Wario?", answers: ["rot", "gelb", "grün", "blau"], correct: 1 }
+  { category: "Unterhaltung", question: "Welche Farbe hat die Mütze von Wario?", answers: ["rot", "gelb", "grün", "blau"], correct: 1 },
+  { category: "Unterhaltung", question: "Welches ist kein Song von Michael Jackson?", answers: ["Bad", "Yesterday", "Thriller", "Billie Jean"], correct: 1 },
+  { category: "Geografie", question: "Wie viele Bundesländer hat Deutschland?", answers: ["4", "7", "10", "16"], correct: 3 }
 ];
