@@ -10,39 +10,74 @@
   </head>
   <body>
     <main class="app">
-      <header class="page-header">
-        <div class="brand-mark" aria-hidden="true">⭐</div>
-        <p class="eyebrow">Lernen macht Spaß!</p>
-        <h1>Schlaukopf-Quiz</h1>
-        <p class="intro">Teste dein Wissen mit einer Runde voller Fragen.</p>
-      </header>
+      <section id="welcome-screen" class="screen active">
+        <header class="page-header">
+          <div class="brand-mark" aria-hidden="true">⭐</div>
+          <p class="eyebrow">Lernen macht Spaß!</p>
+          <h1>Schlaukopf-Quiz</h1>
+          <p class="intro">Trage deinen Namen ein und starte dein Quiz.</p>
+        </header>
 
-      <section class="quiz-card" id="quiz-card" aria-labelledby="question">
-        <div class="quiz-topline">
-          <span class="category" id="category">Allgemeinwissen</span>
-          <span class="progress" id="progress">Frage 1 von 8</span>
-        </div>
-        <div class="progress-track" aria-hidden="true">
-          <div class="progress-fill" id="progress-fill"></div>
+        <div class="panel">
+          <label class="input-label" for="player-name">Name</label>
+          <input id="player-name" class="player-input" type="text" maxlength="18" placeholder="Zum Beispiel: Mia" />
+          <button id="start-btn" class="primary-button" type="button">Quiz starten</button>
         </div>
 
-        <h2 id="question" tabindex="-1">Die Frage wird geladen …</h2>
-        <p class="instruction" id="instruction">Wähle die richtige Antwort aus:</p>
-        <div class="answers" id="answers" role="group" aria-labelledby="question"></div>
-        <p class="feedback" id="feedback" aria-live="polite"></p>
-        <button class="primary-button" id="next-btn" type="button" disabled>Antwort prüfen</button>
+        <div class="profile-box" id="player-profile-box">
+          <div class="profile-header">
+            <span>Profil</span>
+            <button id="logout-btn" class="text-button" type="button">Abmelden</button>
+          </div>
+          <div class="profile-grid">
+            <div class="stat-item">
+              <span class="stat-label">Name</span>
+              <strong id="profile-name">-</strong>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Streak</span>
+              <strong id="profile-streak">0</strong>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Runden</span>
+              <strong id="profile-rounds">0</strong>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Bestes Ergebnis</span>
+              <strong id="profile-best">0/10</strong>
+            </div>
+          </div>
+        </div>
       </section>
 
-      <section class="result-card hidden" id="result" aria-labelledby="result-title" aria-live="polite">
-        <div class="result-star" aria-hidden="true">🏆</div>
-        <p class="eyebrow">Runde geschafft!</p>
-        <h2 id="result-title">Super gemacht!</h2>
-        <p class="result-score" id="score-text"></p>
-        <p class="result-message" id="result-message"></p>
-        <button class="primary-button" id="restart-btn" type="button">Noch einmal spielen</button>
+      <section id="quiz-screen" class="screen hidden">
+        <div class="quiz-card" id="quiz-card" aria-labelledby="question">
+          <div class="quiz-topline">
+            <span class="category" id="category">Allgemeinwissen</span>
+            <span class="progress" id="progress">Frage 1 von 10</span>
+          </div>
+          <div class="progress-track" aria-hidden="true">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+
+          <h2 id="question" tabindex="-1">Die Frage wird geladen …</h2>
+          <p class="instruction" id="instruction">Wähle die richtige Antwort aus:</p>
+          <div class="answers" id="answers" role="group" aria-labelledby="question"></div>
+          <p class="feedback" id="feedback" aria-live="polite"></p>
+          <button class="primary-button" id="next-btn" type="button" disabled>Antwort prüfen</button>
+        </div>
       </section>
 
-      <footer>Viel Spaß beim Knobeln! 💡</footer>
+      <section id="result-screen" class="screen hidden" aria-live="polite">
+        <div class="result-card" id="result">
+          <div class="result-star" aria-hidden="true">🏆</div>
+          <p class="eyebrow">Runde geschafft!</p>
+          <h2 id="result-title">Super gemacht!</h2>
+          <p class="result-score" id="score-text"></p>
+          <p class="result-message" id="result-message"></p>
+          <button class="primary-button" id="restart-btn" type="button">Noch einmal spielen</button>
+        </div>
+      </section>
     </main>
   </body>
 </html>

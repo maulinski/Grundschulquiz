@@ -12,6 +12,8 @@
   --green-bg: #e9f8ef;
   --red: #bd4d4d;
   --red-bg: #fff0ef;
+  --amber: #f6b63b;
+  --shadow: rgba(67, 55, 121, 0.12);
   font-family: "Nunito", "Trebuchet MS", sans-serif;
 }
 
@@ -29,13 +31,17 @@ body {
     #fff8e7;
 }
 
-button { font: inherit; }
+button, input { font: inherit; }
 
 .app {
-  width: min(100% - 32px, 680px);
+  width: min(100% - 32px, 720px);
   margin: 0 auto;
   padding: 38px 0 24px;
 }
+
+.screen { display: none; }
+.screen.active { display: block; }
+.hidden { display: none !important; }
 
 .page-header { margin-bottom: 25px; text-align: center; }
 .brand-mark {
@@ -60,13 +66,76 @@ button { font: inherit; }
 h1 { margin: 0; font-size: clamp(2rem, 7vw, 3rem); line-height: 1.1; }
 .intro { margin: 9px 0 0; color: var(--muted); font-size: 1.05rem; }
 
-.quiz-card, .result-card {
+.panel,
+.quiz-card,
+.result-card {
   padding: clamp(22px, 5vw, 38px);
   border: 1px solid rgba(108, 85, 219, .08);
   border-radius: 27px;
   background: var(--paper);
-  box-shadow: 0 18px 48px rgba(67, 55, 121, .12);
+  box-shadow: 0 18px 48px var(--shadow);
 }
+
+.input-label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: .9rem;
+  font-weight: 900;
+  color: var(--muted);
+}
+.player-input {
+  width: 100%;
+  min-height: 52px;
+  padding: 12px 14px;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  font-size: 1.02rem;
+  outline: none;
+}
+.player-input:focus { border-color: var(--purple); }
+
+.profile-box {
+  margin-top: 24px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #faf8ff;
+}
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  color: var(--purple-dark);
+  font-weight: 900;
+}
+.text-button {
+  border: 0;
+  background: transparent;
+  color: var(--purple);
+  cursor: pointer;
+  font-weight: 800;
+}
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  border-radius: 12px;
+  background: white;
+  border: 1px solid var(--line);
+}
+.stat-label {
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 700;
+}
+
 .quiz-topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .category {
   padding: 6px 12px;
@@ -99,7 +168,7 @@ h2 { margin: 0; font-size: clamp(1.45rem, 5vw, 2rem); line-height: 1.25; }
   transition: border-color .16s ease, background .16s ease, transform .16s ease;
 }
 .answer-button:hover:not(:disabled) { transform: translateY(-2px); border-color: #b6aafa; background: #faf9ff; }
-.answer-button:focus-visible, .primary-button:focus-visible { outline: 3px solid #ffc95e; outline-offset: 3px; }
+.answer-button:focus-visible, .primary-button:focus-visible, .text-button:focus-visible { outline: 3px solid #ffc95e; outline-offset: 3px; }
 .answer-letter {
   display: grid;
   width: 32px;
@@ -137,20 +206,19 @@ h2 { margin: 0; font-size: clamp(1.45rem, 5vw, 2rem); line-height: 1.25; }
 .primary-button:hover:not(:disabled) { background: #5f49ce; transform: translateY(-1px); box-shadow: 0 6px 0 var(--purple-dark); }
 .primary-button:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 2px 0 var(--purple-dark); }
 .primary-button:disabled { cursor: not-allowed; opacity: .48; box-shadow: none; }
-.hidden { display: none; }
 .result-card { text-align: center; }
 .result-star { margin-bottom: 8px; font-size: 3.2rem; }
 .result-card h2 { margin-top: 4px; }
 .result-score { margin: 16px 0 4px; color: var(--purple-dark); font-size: 1.5rem; font-weight: 900; }
 .result-message { margin: 0; color: var(--muted); font-size: 1.05rem; }
-footer { padding: 20px 0 0; color: var(--muted); font-size: .9rem; font-weight: 700; text-align: center; }
 
 @media (max-width: 480px) {
-  .app { width: min(100% - 22px, 680px); padding-top: 25px; }
+  .app { width: min(100% - 22px, 720px); padding-top: 25px; }
   .page-header { margin-bottom: 18px; }
-  .quiz-card, .result-card { border-radius: 21px; }
+  .panel, .quiz-card, .result-card { border-radius: 21px; }
   .quiz-topline { align-items: flex-start; }
   .progress { padding-top: 5px; }
+  .profile-grid { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
