@@ -192,7 +192,7 @@ const restartButton = document.querySelector("#restart-btn");
 const profileName = document.querySelector("#profile-name");
 const profileStreak = document.querySelector("#profile-streak");
 const profileRounds = document.querySelector("#profile-rounds");
-const profileBest = document.querySelector("#profile-best");
+const profileLastResult = document.querySelector("#profile-last-result");
 
 function getProfile() {
   const raw = localStorage.getItem(STORAGE_KEY);
@@ -202,18 +202,18 @@ function getProfile() {
       streak: 0,
       lastPlayedDate: "",
       totalRounds: 0,
-      bestScore: 0
+      lastResult: 0
     };
   }
   try {
-    return JSON.parse(raw);
+    return { ...{ name: "", streak: 0, lastPlayedDate: "", totalRounds: 0, lastResult: 0 }, ...JSON.parse(raw) };
   } catch (error) {
     return {
       name: "",
       streak: 0,
       lastPlayedDate: "",
       totalRounds: 0,
-      bestScore: 0
+      lastResult: 0
     };
   }
 }
@@ -236,7 +236,7 @@ function updateProfileDisplay() {
   profileName.textContent = profile.name || "-";
   profileStreak.textContent = String(profile.streak);
   profileRounds.textContent = String(profile.totalRounds);
-  profileBest.textContent = `${profile.bestScore}/10`;
+  profileLastResult.textContent = `${profile.lastResult ?? 0}/10`;
 }
 
 function isSameDay(dateStringA, dateStringB) {
@@ -269,7 +269,7 @@ function updateStreakAfterGame() {
 
   profile.lastPlayedDate = today;
   profile.totalRounds += 1;
-  profile.bestScore = Math.max(profile.bestScore, score);
+  profile.lastResult = score;
   saveProfile(profile);
   updateProfileDisplay();
 }
