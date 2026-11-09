@@ -47,6 +47,7 @@
               <strong id="profile-best">0/10</strong>
             </div>
           </div>
+          <button id="reset-stats-btn" class="secondary-button" type="button">Statistik zurücksetzen</button>
         </div>
       </section>
 
@@ -88,6 +89,26 @@
         document.querySelector("#welcome-screen").classList.remove("hidden");
         document.querySelector("#welcome-screen").classList.add("active");
         document.querySelector("#player-name").focus();
+      });
+
+      document.querySelector("#reset-stats-btn").addEventListener("click", () => {
+        if (!window.confirm("Möchtest du wirklich alle Statistiken dieses Profils zurücksetzen? Der Profilname bleibt erhalten.")) return;
+
+        try {
+          const profileKey = "grundschulquiz-profile";
+          const profile = JSON.parse(localStorage.getItem(profileKey) || "{}");
+          profile.streak = 0;
+          profile.lastPlayedDate = "";
+          profile.totalRounds = 0;
+          profile.bestScore = 0;
+          localStorage.setItem(profileKey, JSON.stringify(profile));
+
+          document.querySelector("#profile-streak").textContent = "0";
+          document.querySelector("#profile-rounds").textContent = "0";
+          document.querySelector("#profile-best").textContent = "0/10";
+        } catch (error) {
+          window.alert("Die Statistik konnte nicht zurückgesetzt werden. Bitte prüfe, ob der Browser lokales Speichern erlaubt.");
+        }
       });
     </script>
   </body>
