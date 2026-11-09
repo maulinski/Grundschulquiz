@@ -19,26 +19,16 @@
           <p class="intro">Lege ein Profil an und starte das Quiz direkt dort.</p>
         </header>
 
-        <div class="panel create-profile-panel">
+        <form id="create-profile-form" class="panel create-profile-panel">
           <label class="input-label" for="player-name">Neues Profil</label>
           <div class="input-row">
-            <input id="player-name" class="player-input" type="text" maxlength="18" placeholder="Zum Beispiel: Mia" />
-            <button id="create-profile-btn" class="primary-button compact-button" type="button">Profil anlegen</button>
+            <input id="player-name" class="player-input" type="text" maxlength="18" placeholder="Zum Beispiel: Mia" autocomplete="off" />
+            <button id="create-profile-btn" class="primary-button compact-button" type="submit">Profil anlegen</button>
           </div>
           <p id="profile-message" class="profile-message" role="status" aria-live="polite"></p>
-        </div>
+        </form>
 
         <div id="profiles-list" class="profiles-list" aria-live="polite"></div>
-
-        <!-- Hidden compatibility elements required by the existing quiz engine. -->
-        <div class="legacy-controls" aria-hidden="true">
-          <button id="start-btn" type="button">Quiz starten</button>
-          <button id="logout-btn" type="button">Abmelden</button>
-          <span id="profile-name">-</span>
-          <span id="profile-streak">0</span>
-          <span id="profile-rounds">0</span>
-          <span id="profile-last-result">0/10</span>
-        </div>
       </section>
 
       <section id="quiz-screen" class="screen hidden">
@@ -49,7 +39,7 @@
           </div>
           <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progress-fill"></div></div>
           <h2 id="question" tabindex="-1">Die Frage wird geladen …</h2>
-          <p class="instruction" id="instruction">Wähle die richtige Antwort aus:</p>
+          <p class="instruction">Wähle die richtige Antwort aus:</p>
           <div class="answers" id="answers" role="group" aria-labelledby="question"></div>
           <p class="feedback" id="feedback" aria-live="polite"></p>
           <button class="primary-button" id="next-btn" type="button" disabled>Antwort prüfen</button>
@@ -64,186 +54,9 @@
           <p class="result-score" id="score-text"></p>
           <p class="result-message" id="result-message"></p>
           <button class="primary-button" id="restart-btn" type="button">Noch einmal spielen</button>
-          <button class="primary-button" id="home-btn" type="button">Zurück ins Hauptmenü</button>
+          <button class="primary-button" id="home-btn" type="button">Zurück zu den Profilen</button>
         </div>
       </section>
     </main>
-
-    <script>
-      (() => {
-        const PROFILES_KEY = "grundschulquiz-profiles";
-        const LEGACY_KEY = "grundschulquiz-profile";
-        const originalSetItem = Storage.prototype.setItem;
-        let activeProfileId = null;
-
-        function makeProfile(name) {
-          return {
-            id: globalThis.crypto?.randomUUID?.() || `profile-${Date.now()}-${Math.random().toString(16).slice(2)}`,
-            name,
-            streak: 0,
-            lastPlayedDate: "",
-            totalRounds: 0,
-            lastResult: 0
-          };
-        }
-
-        function readProfiles() {
-          try {
-            const parsed = JSON.parse(localStorage.getItem(PROFILES_KEY) || "[]");
-            return Array.isArray(parsed) ? parsed : [];
-          } catch (error) {
-            return [];
-          }
-        }
-
-        function writeProfiles(profiles) {
-          originalSetItem.call(localStorage, PROFILES_KEY, JSON.stringify(profiles));
-        }
-
-        function renderProfiles() {
-          const list = document.querySelector("#profiles-list");
-          const profiles = readProfiles();
-          list.replaceChildren();
-
-          if (profiles.length === 0) {
-            const empty = document.createElement("p");
-            empty.className = "empty-profiles";
-            empty.textContent = "Noch keine Profile angelegt.";
-            list.append(empty);
-            return;
-          }
-
-          profiles.forEach((profile) => {
-            const card = document.createElement("article");
-            card.className = "profile-card";
-            const title = document.createElement("h2");
-            title.className = "profile-card-title";
-            title.textContent = profile.name;
-
-            const stats = document.createElement("div");
-            stats.className = "profile-grid";
-            [
-              ["Streak", String(profile.streak || 0)],
-              ["Runden", String(profile.totalRounds || 0)],
-              ["Letztes Ergebnis", `${profile.lastResult ?? 0}/10`]
-            ].forEach(([label, value]) => {
-              const stat = document.createElement("div");
-              stat.className = "stat-item";
-              const statLabel = document.createElement("span");
-              statLabel.className = "stat-label";
-              statLabel.textContent = label;
-              const statValue = document.createElement("strong");
-              statValue.textContent = value;
-              stat.append(statLabel, statValue);
-              stats.append(stat);
-            });
-
-            const start = document.createElement("button");
-            start.className = "primary-button profile-start-button";
-            start.type = "button";
-            start.textContent = "Quiz starten";
-            start.addEventListener("click", () => {
-              activeProfileId = profile.id;
-              originalSetItem.call(localStorage, LEGACY_KEY, JSON.stringify(profile));
-              document.querySelector("#player-name").value = profile.name;
-              document.querySelector("#start-btn").click();
-            });
-
-            const actions = document.createElement("div");
-            actions.className = "profile-actions";
-            const reset = document.createElement("button");
-            reset.className = "secondary-button";
-            reset.type = "button";
-            reset.textContent = "Statistik zurücksetzen";
-            reset.addEventListener("click", () => {
-              if (!window.confirm(`Möchtest du die Statistik von ${profile.name} zurücksetzen?`)) return;
-              const updated = readProfiles().map((item) => item.id === profile.id
-                ? { ...item, streak: 0, lastPlayedDate: "", totalRounds: 0, lastResult: 0 }
-                : item);
-              writeProfiles(updated);
-              if (activeProfileId === profile.id) {
-                const selected = updated.find((item) => item.id === profile.id);
-                originalSetItem.call(localStorage, LEGACY_KEY, JSON.stringify(selected));
-              }
-              renderProfiles();
-            });
-
-            const remove = document.createElement("button");
-            remove.className = "secondary-button delete-profile-button";
-            remove.type = "button";
-            remove.textContent = "Profil löschen";
-            remove.addEventListener("click", () => {
-              if (!window.confirm(`Möchtest du das Profil ${profile.name} wirklich löschen?`)) return;
-              writeProfiles(readProfiles().filter((item) => item.id !== profile.id));
-              if (activeProfileId === profile.id) activeProfileId = null;
-              renderProfiles();
-            });
-
-            actions.append(reset, remove);
-            card.append(title, stats, start, actions);
-            list.append(card);
-          });
-        }
-
-        // Keep the existing quiz engine's profile storage in sync with the selected profile.
-        Storage.prototype.setItem = function(key, value) {
-          originalSetItem.call(this, key, value);
-          if (key !== LEGACY_KEY || !activeProfileId) return;
-          try {
-            const savedProfile = JSON.parse(value);
-            const profiles = readProfiles();
-            const index = profiles.findIndex((profile) => profile.id === activeProfileId);
-            if (index < 0) return;
-            profiles[index] = { ...profiles[index], ...savedProfile, id: activeProfileId };
-            writeProfiles(profiles);
-            renderProfiles();
-          } catch (error) {
-            // Ignore invalid storage data; the quiz engine handles its own profile state.
-          }
-        };
-
-        document.querySelector("#create-profile-btn").addEventListener("click", () => {
-          const input = document.querySelector("#player-name");
-          const message = document.querySelector("#profile-message");
-          const name = input.value.trim();
-          if (!name) {
-            message.textContent = "Bitte gib zuerst einen Namen ein.";
-            input.focus();
-            return;
-          }
-          const profiles = readProfiles();
-          if (profiles.some((profile) => profile.name.toLocaleLowerCase() === name.toLocaleLowerCase())) {
-            message.textContent = "Dieses Profil gibt es bereits.";
-            return;
-          }
-          profiles.push(makeProfile(name));
-          writeProfiles(profiles);
-          input.value = "";
-          message.textContent = `Profil „${name}“ wurde angelegt.`;
-          renderProfiles();
-        });
-
-        document.querySelector("#home-btn").addEventListener("click", () => {
-          document.querySelector("#result-screen").classList.remove("active");
-          document.querySelector("#result-screen").classList.add("hidden");
-          document.querySelector("#welcome-screen").classList.remove("hidden");
-          document.querySelector("#welcome-screen").classList.add("active");
-        });
-
-        // Bring forward an existing single profile without losing its statistics.
-        if (readProfiles().length === 0) {
-          try {
-            const legacy = JSON.parse(localStorage.getItem(LEGACY_KEY) || "null");
-            if (legacy?.name) {
-              writeProfiles([{ ...makeProfile(legacy.name), ...legacy }]);
-            }
-          } catch (error) {
-            // Begin with an empty list when previous profile data is invalid.
-          }
-        }
-
-        renderProfiles();
-      })();
-    </script>
   </body>
 </html>
