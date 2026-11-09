@@ -76,8 +76,19 @@
           <p class="result-score" id="score-text"></p>
           <p class="result-message" id="result-message"></p>
           <button class="primary-button" id="restart-btn" type="button">Noch einmal spielen</button>
+          <button class="primary-button" id="home-btn" type="button">Zurück ins Hauptmenü</button>
         </div>
       </section>
     </main>
+
+    <script>
+      document.querySelector("#home-btn").addEventListener("click", () => {
+        document.querySelector("#result-screen").classList.remove("active");
+        document.querySelector("#result-screen").classList.add("hidden");
+        document.querySelector("#welcome-screen").classList.remove("hidden");
+        document.querySelector("#welcome-screen").classList.add("active");
+        document.querySelector("#player-name").focus();
+      });
+    </script>
   </body>
 </html>
