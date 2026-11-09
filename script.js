@@ -120,8 +120,8 @@ function renderProfiles() {
     const stats = document.createElement("div");
     stats.className = "profile-grid";
     stats.append(
-      makeStat("Streak", String(profile.streak || 0)),
-      makeStat("Runden", String(profile.totalRounds || 0)),
+      makeStat("Serie", String(profile.streak || 0)),
+      makeStat("gespielte Runden", String(profile.totalRounds || 0)),
       makeStat("Letztes Ergebnis", `${profile.lastResult ?? 0}/10`)
     );
 
