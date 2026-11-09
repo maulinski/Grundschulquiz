@@ -27,7 +27,6 @@
         <div class="profile-box" id="player-profile-box">
           <div class="profile-header">
             <span>Profil</span>
-            <button id="logout-btn" class="text-button" type="button">Abmelden</button>
           </div>
           <div class="profile-grid">
             <div class="stat-item">
@@ -43,8 +42,8 @@
               <strong id="profile-rounds">0</strong>
             </div>
             <div class="stat-item">
-              <span class="stat-label">Bestes Ergebnis</span>
-              <strong id="profile-best">0/10</strong>
+              <span class="stat-label">Letztes Ergebnis</span>
+              <strong id="profile-last-result">0/10</strong>
             </div>
           </div>
           <button id="reset-stats-btn" class="secondary-button" type="button">Statistik zurücksetzen</button>
@@ -92,6 +91,14 @@
         document.querySelector("#player-name").focus();
       });
 
+      function updateStatsCard() {
+        const profile = JSON.parse(localStorage.getItem("grundschulquiz-profile") || "{}") || {};
+        document.querySelector("#profile-name").textContent = profile.name || "-";
+        document.querySelector("#profile-streak").textContent = String(profile.streak || 0);
+        document.querySelector("#profile-rounds").textContent = String(profile.totalRounds || 0);
+        document.querySelector("#profile-last-result").textContent = `${profile.lastResult ?? 0}/10`;
+      }
+
       document.querySelector("#reset-stats-btn").addEventListener("click", () => {
         if (!window.confirm("Möchtest du wirklich alle Statistiken dieses Profils zurücksetzen? Der Profilname bleibt erhalten.")) return;
 
@@ -101,12 +108,9 @@
           profile.streak = 0;
           profile.lastPlayedDate = "";
           profile.totalRounds = 0;
-          profile.bestScore = 0;
+          profile.lastResult = 0;
           localStorage.setItem(profileKey, JSON.stringify(profile));
-
-          document.querySelector("#profile-streak").textContent = "0";
-          document.querySelector("#profile-rounds").textContent = "0";
-          document.querySelector("#profile-best").textContent = "0/10";
+          updateStatsCard();
         } catch (error) {
           window.alert("Die Statistik konnte nicht zurückgesetzt werden. Bitte prüfe, ob der Browser lokales Speichern erlaubt.");
         }
@@ -117,10 +121,7 @@
 
         try {
           localStorage.removeItem("grundschulquiz-profile");
-          document.querySelector("#profile-name").textContent = "-";
-          document.querySelector("#profile-streak").textContent = "0";
-          document.querySelector("#profile-rounds").textContent = "0";
-          document.querySelector("#profile-best").textContent = "0/10";
+          updateStatsCard();
           document.querySelector("#player-name").value = "";
         } catch (error) {
           window.alert("Das Profil konnte nicht gelöscht werden. Bitte prüfe, ob der Browser lokales Speichern erlaubt.");
