@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#fff8e7" />
+    <title>Grundschulquiz – Schlaukopf-Quiz</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <main class="app">
+      <header class="page-header">
+        <div class="brand-mark" aria-hidden="true">⭐</div>
+        <p class="eyebrow">Lernen macht Spaß!</p>
+        <h1>Schlaukopf-Quiz</h1>
+        <p class="intro">Teste dein Wissen mit einer Runde voller Fragen.</p>
+      </header>
+
+      <section class="quiz-card" id="quiz-card" aria-labelledby="question">
+        <div class="quiz-topline">
+          <span class="category" id="category">Allgemeinwissen</span>
+          <span class="progress" id="progress">Frage 1 von 8</span>
+        </div>
+        <div class="progress-track" aria-hidden="true">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+
+        <h2 id="question" tabindex="-1">Die Frage wird geladen …</h2>
+        <p class="instruction" id="instruction">Wähle die richtige Antwort aus:</p>
+        <div class="answers" id="answers" role="group" aria-labelledby="question"></div>
+        <p class="feedback" id="feedback" aria-live="polite"></p>
+        <button class="primary-button" id="next-btn" type="button" disabled>Antwort prüfen</button>
+      </section>
+
+      <section class="result-card hidden" id="result" aria-labelledby="result-title" aria-live="polite">
+        <div class="result-star" aria-hidden="true">🏆</div>
+        <p class="eyebrow">Runde geschafft!</p>
+        <h2 id="result-title">Super gemacht!</h2>
+        <p class="result-score" id="score-text"></p>
+        <p class="result-message" id="result-message"></p>
+        <button class="primary-button" id="restart-btn" type="button">Noch einmal spielen</button>
+      </section>
+
+      <footer>Viel Spaß beim Knobeln! 💡</footer>
+    </main>
+  </body>
+</html>
