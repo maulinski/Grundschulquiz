@@ -60,7 +60,7 @@ window.questionPool = [
   { category: "Körper", question: "Wie heißt der bewegliche Teil zwischen Kopf und Körper?", answers: ["Hals", "Knöchel", "Schulter", "Knie"], correct: 0 },
   { category: "Körper", question: "Was wächst auf dem Kopf?", answers: ["Haare", "Fingernägel", "Zähne", "Bauch"], correct: 0 },
   { category: "Körper", question: "Wie heißt die Vorderseite des Unterschenkels?", answers: ["Schienbein", "Arm", "Knie", "Hals"], correct: 0 },
-  { category: "Körper", question: "Welche Körperteile haben Finger- und Fußnägel?", answers: ["Finger und Zehen", "Ohren und Nase", "Hände und Füße", "Augen und Ohren"], correct: 0 },
+  { category: "Körper", question: "Welche Körperteile haben Nägel?", answers: ["Finger und Zehen", "Ohren und Nase", "Bauch und Rücken", "Augen und Ohren"], correct: 0 },
   { category: "Körper", question: "Welcher Muskel hilft beim Beugen des Arms?", answers: ["Bizeps", "Trizeps", "Wadenmuskel", "Brustmuskel"], correct: 0 },
   { category: "Körper", question: "Was schützt die Augen vor Schweiß?", answers: ["Augenbrauen", "Lippen", "Zähne", "Ohren"], correct: 0 },
   { category: "Natur", question: "Was brauchen Pflanzen als Lichtquelle zum Wachsen?", answers: ["Sonnenlicht", "Schokolade", "Sand", "Wasserflasche"], correct: 0 },
