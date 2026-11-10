@@ -337,7 +337,7 @@ restartButton.addEventListener("click", startNewRound);
 document.querySelector("#home-btn").addEventListener("click", () => {
   activeProfileId = null;
   showScreen(welcomeScreen);
-  nameInput.focus();
+  document.querySelector("#create-profile-btn").focus();
 });
 
 migrateLegacyProfile();
