@@ -550,4 +550,10 @@ window.addEventListener("focus", () => {
 profilesCache = readLocalProfiles();
 renderProfiles();
 showScreen(welcomeScreen);
-initializeCloud();
+if (getAccessKey()) {
+  // Respect a key already saved on this device instead of overwriting it with the form's default.
+  initializeCloud();
+} else {
+  // Submit the connection form on first load, just as if the user pressed "Verbinden".
+  jsonbinConfigForm.requestSubmit();
+}
