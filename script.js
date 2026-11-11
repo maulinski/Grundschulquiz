@@ -16,6 +16,7 @@ let score = 0;
 let selectedAnswer = null;
 let displayedAnswers = [];
 let answered = false;
+let isStartingRound = false;
 let activeProfileId = null;
 let profilesCache = [];
 let syncReady = false;
@@ -52,7 +53,8 @@ function createProfile(name) {
     lastPlayedDate: "",
     totalRounds: 0,
     lastResult: 0,
-    totalScore: 0
+    totalScore: 0,
+    questionCounts: {}
   };
 }
 
@@ -266,7 +268,8 @@ function renderProfiles() {
           lastPlayedDate: "",
           totalRounds: 0,
           lastResult: 0,
-          totalScore: 0
+          totalScore: 0,
+          questionCounts: {}
         }));
       } catch (error) {
         setSyncMessage(`Änderung fehlgeschlagen: ${error.message}`, true);
@@ -329,14 +332,64 @@ function shuffle(items) {
   return cloned;
 }
 
-function startNewRound() {
-  if (!activeProfileId) return;
-  questionIndex = 0;
-  score = 0;
-  roundQuestions = shuffle(questionPool).slice(0, QUESTIONS_PER_ROUND);
-  showScreen(quizScreen);
-  renderQuestion();
-  questionElement.focus();
+function selectWeightedQuestions(pool, questionCounts, amount) {
+  const remaining = [...pool];
+  const selected = [];
+
+  while (selected.length < amount && remaining.length > 0) {
+    const weights = remaining.map((question) => {
+      const count = Math.max(0, Number(questionCounts?.[question.question]) || 0);
+      return 1 / (count + 1);
+    });
+    const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+    let choice = Math.random() * totalWeight;
+    let selectedIndex = weights.length - 1;
+
+    for (let index = 0; index < weights.length; index += 1) {
+      choice -= weights[index];
+      if (choice < 0) {
+        selectedIndex = index;
+        break;
+      }
+    }
+
+    selected.push(remaining.splice(selectedIndex, 1)[0]);
+  }
+
+  return selected;
+}
+
+async function startNewRound() {
+  if (!activeProfileId || isStartingRound) return;
+  isStartingRound = true;
+
+  try {
+    const profile = profilesCache.find((current) => current.id === activeProfileId);
+    if (!profile) throw new Error("Das Profil konnte nicht gefunden werden.");
+
+    const existingCounts = profile.questionCounts || {};
+    roundQuestions = selectWeightedQuestions(questionPool, existingCounts, QUESTIONS_PER_ROUND);
+    const questionsThisRound = roundQuestions.map((question) => question.question);
+
+    await updateProfile(activeProfileId, (current) => {
+      const questionCounts = { ...(current.questionCounts || {}) };
+      questionsThisRound.forEach((questionId) => {
+        questionCounts[questionId] = (Number(questionCounts[questionId]) || 0) + 1;
+      });
+      return { ...current, questionCounts };
+    });
+
+    questionIndex = 0;
+    score = 0;
+    showScreen(quizScreen);
+    renderQuestion();
+    questionElement.focus();
+    setSyncMessage("Fragen dieser Runde wurden gespeichert.");
+  } catch (error) {
+    setSyncMessage(`Runde konnte nicht gestartet werden: ${error.message}`, true);
+  } finally {
+    isStartingRound = false;
+  }
 }
 
 function renderQuestion() {
