@@ -19,11 +19,25 @@
           <p class="intro">Lege ein Profil an und starte das Quiz direkt dort.</p>
         </header>
 
+        <section class="panel sync-panel" aria-labelledby="sync-heading">
+          <h2 id="sync-heading">Geräte-Synchronisierung</h2>
+          <p>Gib einmalig pro Gerät den JSONbin Access Key ein. Verwende einen eingeschränkten Schlüssel mit Lese- und Änderungsrechten für den Quiz-Bin – nicht den Master Key.</p>
+          <form id="jsonbin-config-form">
+            <label class="input-label" for="jsonbin-access-key">JSONbin Access Key</label>
+            <div class="input-row">
+              <input id="jsonbin-access-key" class="player-input" type="password" autocomplete="off" required />
+              <button class="primary-button compact-button" type="submit">Verbinden</button>
+            </div>
+          </form>
+          <p id="sync-message" class="sync-message" role="status" aria-live="polite"></p>
+          <button id="sync-btn" class="secondary-button sync-refresh-button" type="button" disabled>Jetzt synchronisieren</button>
+        </section>
+
         <form id="create-profile-form" class="panel create-profile-panel">
           <label class="input-label" for="player-name">Neues Profil</label>
           <div class="input-row">
             <input id="player-name" class="player-input" type="text" maxlength="18" placeholder="Zum Beispiel: Mia" autocomplete="off" />
-            <button id="create-profile-btn" class="primary-button compact-button" type="submit">Profil anlegen</button>
+            <button id="create-profile-btn" class="primary-button compact-button" type="submit" disabled>Profil anlegen</button>
           </div>
           <p id="profile-message" class="profile-message" role="status" aria-live="polite"></p>
         </form>
