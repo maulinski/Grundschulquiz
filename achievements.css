@@ -1,0 +1,73 @@
+/* Achievement cards and profile dialog */
+.achievement-button {
+  display: block;
+  width: 100%;
+  min-height: 46px;
+  margin: 12px 0 0;
+  padding: 10px 14px;
+  border: 2px solid #d8d1ff;
+  border-radius: 13px;
+  background: #f5f2ff;
+  color: #5140b7;
+  cursor: pointer;
+  font-weight: 900;
+}
+.achievement-button:hover { border-color: #6c55db; background: #ede9ff; }
+
+.round-achievement-progress {
+  display: grid;
+  gap: 10px;
+  margin: 22px 0 8px;
+  text-align: left;
+}
+.achievement-panel-title { margin: 0 0 2px; color: #5140b7; font-size: 1.1rem; }
+.achievement-list { display: grid; gap: 12px; margin-top: 18px; }
+.achievement-card { padding: 14px 16px; border: 1px solid #e8e4fb; border-radius: 15px; background: #fbfaff; }
+.achievement-card-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.achievement-card-header strong { color: #26324b; font-size: .98rem; }
+.achievement-badge { flex: 0 0 auto; padding: 4px 10px; border-radius: 99px; background: #f0edff; color: #5140b7; font-size: .78rem; font-weight: 900; }
+.achievement-status { margin: 8px 0 6px; color: #778198; font-size: .88rem; font-weight: 800; }
+.achievement-progress-track { height: 9px; overflow: hidden; border-radius: 99px; background: #eeedf4; }
+.achievement-progress-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #9a87fa, #6551d2); transition: width .25s ease; }
+.achievement-note { display: block; margin-top: 6px; color: #778198; font-size: .78rem; font-weight: 700; }
+.achievement-empty { margin: 0; color: #778198; text-align: center; }
+
+.achievement-modal {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(31, 35, 54, .58);
+}
+.achievement-dialog {
+  position: relative;
+  width: min(100%, 560px);
+  max-height: min(85vh, 760px);
+  overflow: auto;
+  padding: 28px;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(20, 20, 40, .25);
+  text-align: left;
+}
+.achievement-dialog h2 { margin: 2px 42px 0 0; color: #26324b; }
+.achievement-close-btn {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 12px;
+  background: #f2efff;
+  color: #5140b7;
+  cursor: pointer;
+  font-size: 1.7rem;
+  font-weight: 800;
+  line-height: 1;
+}
+@media (max-width: 520px) {
+  .achievement-dialog { padding: 22px 16px; }
+}
