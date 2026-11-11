@@ -6,6 +6,53 @@ const JSONBIN_ACCESS_KEY_STORAGE = "grundschulquiz-jsonbin-access-key";
 const JSONBIN_API_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
 const questionPool = window.questionPool;
 
+const ACHIEVEMENT_DEFINITIONS = [
+  {
+    id: "roundsPlayed",
+    label: "Gespielte Runden",
+    valueGetter: (profile) => Number(profile.totalRounds || 0),
+    tiers: [
+      { name: "Bronze", threshold: 5 },
+      { name: "Silber", threshold: 20 },
+      { name: "Gold", threshold: 50 },
+      { name: "Platin", threshold: 100 }
+    ]
+  },
+  {
+    id: "perfectRounds",
+    label: "Perfekte Runden",
+    valueGetter: (profile) => Number(profile.perfectRounds || 0),
+    tiers: [
+      { name: "Bronze", threshold: 1 },
+      { name: "Silber", threshold: 5 },
+      { name: "Gold", threshold: 15 },
+      { name: "Platin", threshold: 30 }
+    ]
+  },
+  {
+    id: "correctAnswers",
+    label: "Korrekt beantwortete Fragen",
+    valueGetter: (profile) => Number(profile.totalScore || 0),
+    tiers: [
+      { name: "Bronze", threshold: 25 },
+      { name: "Silber", threshold: 100 },
+      { name: "Gold", threshold: 300 },
+      { name: "Platin", threshold: 750 }
+    ]
+  },
+  {
+    id: "bestRound",
+    label: "Starke Runde",
+    valueGetter: (profile) => Number(profile.bestRound || 0),
+    tiers: [
+      { name: "Bronze", threshold: 7 },
+      { name: "Silber", threshold: 8 },
+      { name: "Gold", threshold: 9 },
+      { name: "Platin", threshold: 10 }
+    ]
+  }
+];
+
 if (!Array.isArray(questionPool) || questionPool.length < QUESTIONS_PER_ROUND) {
   throw new Error("Der Fragenpool fehlt oder enthält weniger als 10 Fragen. Bitte prüfe questions.js.");
 }
@@ -44,6 +91,11 @@ const resultTitle = document.querySelector("#result-title");
 const scoreText = document.querySelector("#score-text");
 const resultMessage = document.querySelector("#result-message");
 const restartButton = document.querySelector("#restart-btn");
+const roundAchievementProgress = document.querySelector("#round-achievement-progress");
+const achievementModal = document.querySelector("#achievement-modal");
+const achievementModalTitle = document.querySelector("#achievement-modal-title");
+const achievementModalContent = document.querySelector("#achievement-modal-content");
+const achievementCloseButton = document.querySelector(".achievement-close-btn");
 
 function createProfile(name) {
   return {
@@ -52,6 +104,8 @@ function createProfile(name) {
     streak: 0,
     lastPlayedDate: "",
     totalRounds: 0,
+    perfectRounds: 0,
+    bestRound: 0,
     lastResult: 0,
     totalScore: 0,
     questionCounts: {}
@@ -210,6 +264,94 @@ function makeStat(label, value) {
   return item;
 }
 
+function getAchievementState(profile, achievement) {
+  const value = achievement.valueGetter(profile);
+  const tiers = achievement.tiers;
+  let reachedIndex = -1;
+
+  for (let index = 0; index < tiers.length; index += 1) {
+    if (value >= tiers[index].threshold) reachedIndex = index;
+  }
+
+  const currentTier = reachedIndex >= 0 ? tiers[reachedIndex] : null;
+  const nextTier = reachedIndex < tiers.length - 1 ? tiers[reachedIndex + 1] : null;
+  const progress = nextTier ? Math.min(100, Math.max(0, (value / nextTier.threshold) * 100)) : 100;
+
+  return {
+    ...achievement,
+    value,
+    currentTierName: currentTier ? currentTier.name : "Noch kein",
+    currentThreshold: currentTier ? currentTier.threshold : 0,
+    nextTier,
+    progress,
+    nextTarget: nextTier ? nextTier.threshold : null,
+    reached: currentTier !== null,
+    labelText: nextTier ? `${currentTier ? currentTier.name : "Noch kein"} → ${nextTier.name}` : `${currentTier ? currentTier.name : "Noch kein"} erreicht`
+  };
+}
+
+function renderAchievementCard(state) {
+  const card = document.createElement("div");
+  card.className = "achievement-card";
+
+  const header = document.createElement("div");
+  header.className = "achievement-card-header";
+
+  const title = document.createElement("strong");
+  title.textContent = state.label;
+
+  const badge = document.createElement("span");
+  badge.className = "achievement-badge";
+  badge.textContent = state.currentTierName === "Noch kein" ? "Start" : state.currentTierName;
+
+  header.append(title, badge);
+
+  const status = document.createElement("p");
+  status.className = "achievement-status";
+  status.textContent = state.nextTier ? `${state.value} / ${state.nextTier.threshold} Punkte` : `${state.value} erreicht`;
+
+  const bar = document.createElement("div");
+  bar.className = "achievement-progress-track";
+  const fill = document.createElement("div");
+  fill.className = "achievement-progress-fill";
+  fill.style.width = `${state.progress}%`;
+  bar.append(fill);
+
+  const note = document.createElement("small");
+  note.className = "achievement-note";
+  note.textContent = state.nextTier ? `Noch ${Math.max(0, state.nextTier.threshold - state.value)} bis ${state.nextTier.name}` : "Maximal erreicht";
+
+  card.append(header, status, bar, note);
+  return card;
+}
+
+function getAchievementSummary(profile, limit = 3) {
+  return ACHIEVEMENT_DEFINITIONS
+    .map((achievement) => getAchievementState(profile, achievement))
+    .sort((left, right) => {
+      const leftGap = left.nextTier ? Math.max(0, left.nextTier.threshold - left.value) : Number.MAX_SAFE_INTEGER;
+      const rightGap = right.nextTier ? Math.max(0, right.nextTier.threshold - right.value) : Number.MAX_SAFE_INTEGER;
+      if (leftGap !== rightGap) return leftGap - rightGap;
+      return right.value - left.value;
+    })
+    .slice(0, limit);
+}
+
+function openAchievementModal(profile) {
+  if (!profile) return;
+  achievementModalTitle.textContent = `Erfolge von ${profile.name}`;
+  achievementModalContent.replaceChildren(
+    ...ACHIEVEMENT_DEFINITIONS.map((achievement) => renderAchievementCard(getAchievementState(profile, achievement)))
+  );
+  achievementModal.classList.remove("hidden");
+  achievementModal.setAttribute("aria-hidden", "false");
+}
+
+function closeAchievementModal() {
+  achievementModal.classList.add("hidden");
+  achievementModal.setAttribute("aria-hidden", "true");
+}
+
 async function updateProfile(profileId, updater) {
   return changeProfiles((profiles) => profiles.map((profile) =>
     profile.id === profileId ? updater(profile) : profile
@@ -238,9 +380,15 @@ function renderProfiles() {
     stats.className = "profile-grid";
     stats.append(
       makeStat("Gespielte Runden", String(profile.totalRounds || 0)),
-      makeStat("Letztes Ergebnis", `${profile.lastResult ?? 0}/10`),
+      makeStat("Perfekte Runden", String(profile.perfectRounds || 0)),
       makeStat("Gesamtergebnis", `${profile.totalScore || 0}/${(profile.totalRounds || 0) * QUESTIONS_PER_ROUND}`)
     );
+
+    const achievementsButton = document.createElement("button");
+    achievementsButton.className = "secondary-button achievement-button";
+    achievementsButton.type = "button";
+    achievementsButton.textContent = "Erfolge";
+    achievementsButton.addEventListener("click", () => openAchievementModal(profile));
 
     const start = document.createElement("button");
     start.className = "primary-button profile-start-button";
@@ -267,6 +415,8 @@ function renderProfiles() {
           streak: 0,
           lastPlayedDate: "",
           totalRounds: 0,
+          perfectRounds: 0,
+          bestRound: 0,
           lastResult: 0,
           totalScore: 0,
           questionCounts: {}
@@ -292,7 +442,7 @@ function renderProfiles() {
     });
 
     actions.append(reset, remove);
-    card.append(title, stats, start, actions);
+    card.append(title, stats, achievementsButton, start, actions);
     profilesList.append(card);
   });
 }
@@ -471,14 +621,43 @@ async function recordRoundResult() {
       else if (daysApart === 1) streak += 1;
       else streak = 1;
     }
+
+    const perfectRounds = (profile.perfectRounds || 0) + (score === QUESTIONS_PER_ROUND ? 1 : 0);
+    const bestRound = Math.max(profile.bestRound || 0, score);
+
     return {
       ...profile,
       streak,
       lastPlayedDate: today,
       totalRounds: (profile.totalRounds || 0) + 1,
+      perfectRounds,
+      bestRound,
       lastResult: score,
       totalScore: (profile.totalScore || 0) + score
     };
+  });
+}
+
+function renderRoundAchievements(profile) {
+  if (!profile || !roundAchievementProgress) return;
+  const achievements = getAchievementSummary(profile, 3);
+  roundAchievementProgress.replaceChildren();
+
+  if (achievements.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "achievement-empty";
+    empty.textContent = "Noch keine Erfolge erreicht.";
+    roundAchievementProgress.append(empty);
+    return;
+  }
+
+  const title = document.createElement("h3");
+  title.className = "achievement-panel-title";
+  title.textContent = "Erfolge kurz vorm Ziel";
+  roundAchievementProgress.append(title);
+
+  achievements.forEach((achievement) => {
+    roundAchievementProgress.append(renderAchievementCard(achievement));
   });
 }
 
@@ -489,6 +668,9 @@ async function showResult() {
   } catch (error) {
     setSyncMessage(`Ergebnis konnte nicht synchronisiert werden: ${error.message}`, true);
   }
+
+  const profile = profilesCache.find((current) => current.id === activeProfileId) || null;
+  renderRoundAchievements(profile);
 
   showScreen(resultScreen);
   scoreText.textContent = `Du hast ${score} von ${QUESTIONS_PER_ROUND} Punkten!`;
@@ -543,6 +725,14 @@ document.querySelector("#home-btn").addEventListener("click", () => {
   showScreen(welcomeScreen);
   document.querySelector("#create-profile-btn").focus();
 });
+
+achievementCloseButton.addEventListener("click", closeAchievementModal);
+achievementModal.addEventListener("click", (event) => {
+  if (event.target === achievementModal) closeAchievementModal();
+});
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !achievementModal.classList.contains("hidden")) closeAchievementModal();
+});
 window.addEventListener("focus", () => {
   if (syncReady) initializeCloud();
 });
@@ -551,9 +741,7 @@ profilesCache = readLocalProfiles();
 renderProfiles();
 showScreen(welcomeScreen);
 if (getAccessKey()) {
-  // Respect a key already saved on this device instead of overwriting it with the form's default.
   initializeCloud();
 } else {
-  // Submit the connection form on first load, just as if the user pressed "Verbinden".
   jsonbinConfigForm.requestSubmit();
 }
