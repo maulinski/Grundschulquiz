@@ -2,7 +2,7 @@
 .result-achievement-card .achievement-badge,
 .result-achievement-card .achievement-panel-title { display: none !important; }
 .result-achievement-card .achievement-card-header { justify-content: flex-start; }
-.achievement-progress-row { display: flex; align-items: center; gap: 12px; }
+.achievement-progress-row { display: flex; align-items: center; gap: 10px; }
 .achievement-progress-row .achievement-progress-track { flex: 1 1 auto; min-width: 0; height: 12px; }
 .achievement-progress-row .achievement-progress-fill {
   width: 0;
@@ -10,13 +10,22 @@
 }
 .achievement-trophy-wrap {
   display: grid;
-  width: 28px;
-  height: 28px;
-  flex: 0 0 28px;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
   place-items: center;
   color: var(--trophy-color, #b87333);
 }
-.achievement-trophy { display: block; width: 25px; height: 25px; fill: currentColor; }
+.achievement-trophy {
+  display: block;
+  width: 16px;
+  height: 16px;
+  max-width: 16px;
+  max-height: 16px;
+  fill: var(--trophy-color, currentColor);
+  color: var(--trophy-color, currentColor);
+}
+.achievement-trophy path { fill: currentColor; }
 @media (prefers-reduced-motion: reduce) {
   .achievement-progress-row .achievement-progress-fill { transition-duration: .01ms; }
 }
