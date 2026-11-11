@@ -296,7 +296,7 @@ window.questionPool = [
   { category: "Harry Potter", question: "Welcher Zauberspruch öffnet verschlossene Türen?", answers: ["Accio", "Wingardium Leviosa", "Alohomora", "Stupor"], correct: 2 },
   { category: "Mein Lotta-Leben", question: "Wie heißt Lottas allerbeste Freundin?", answers: ["Cheyenne", "Berenike", "Maja", "Pauline"], correct: 0 },
   { category: "Mein Lotta-Leben", question: "Welches Musikinstrument muss Lotta lernen, obwohl sie es gar nicht mag?", answers: ["Geige", "Klavier", "Blockflöte", "Trompete"], correct: 2 },
-  { category: "Mein Lotta-Leben", question: "Wie heißen Lottas nervige Zwillingsbrüder?", answers: ["Max und Moritz", "Jakob und Lukas", "Tim und Tom", "Ben und Finn"], correct: 1 },
+  { category: "Mein Lotta-Leben", question: "Wie heißen Lottas nervige Zwillingsbrüder?", answers: ["Max und Moritz", "Jakob und Simon", "Tim und Tom", "Ben und Finn"], correct: 1 },
   { category: "Mein Lotta-Leben", question: "Wie heißt die eingebildete Anführerin der Mädchen-Bande „Die Glamour-Girls“?", answers: ["Berenike", "Chantal", "Leonie", "Victoria"], correct: 0 },
   { category: "Mein Lotta-Leben", question: "Welches Haustier wünscht sich Lotta am allermeisten?", answers: ["Einen Hund", "Ein Pony", "Eine Schildkröte", "Ein Kaninchen"], correct: 0 },
   { category: "Mein Lotta-Leben", question: "Wie heißt die Bande, die Lotta, Cheyenne und Paul gründen?", answers: ["Die wilden Hühner", "Die Rocker-Kids", "Die wilden Kaninchen", "Die coolen Socken"], correct: 2 },
