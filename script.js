@@ -14,6 +14,7 @@ let roundQuestions = [];
 let questionIndex = 0;
 let score = 0;
 let selectedAnswer = null;
+let displayedAnswers = [];
 let answered = false;
 let activeProfileId = null;
 let profilesCache = [];
@@ -342,6 +343,7 @@ function renderQuestion() {
   const item = roundQuestions[questionIndex];
   selectedAnswer = null;
   answered = false;
+  displayedAnswers = shuffle(item.answers.map((answer, originalIndex) => ({ answer, originalIndex })));
   categoryElement.textContent = item.category;
   progressElement.textContent = `Frage ${questionIndex + 1} von ${QUESTIONS_PER_ROUND}`;
   progressFill.style.width = `${((questionIndex + 1) / QUESTIONS_PER_ROUND) * 100}%`;
@@ -352,7 +354,7 @@ function renderQuestion() {
   nextButton.textContent = "Antwort prüfen";
   answersElement.replaceChildren();
 
-  item.answers.forEach((answer, index) => {
+  displayedAnswers.forEach(({ answer }, index) => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "answer-button";
@@ -383,7 +385,7 @@ function selectAnswer(index) {
 function checkAnswer() {
   if (selectedAnswer === null || answered) return;
   answered = true;
-  const correctIndex = roundQuestions[questionIndex].correct;
+  const correctIndex = displayedAnswers.findIndex(({ originalIndex }) => originalIndex === roundQuestions[questionIndex].correct);
   answersElement.querySelectorAll(".answer-button").forEach((button, index) => {
     button.disabled = true;
     if (index === correctIndex) button.classList.add("correct");
