@@ -133,7 +133,8 @@ async function initializeCloud() {
   if (!accessKey) {
     syncReady = false;
     syncButton.disabled = true;
-    setSyncMessage("Gib einmalig auf diesem Gerät einen JSONbin Access Key mit Lese- und Änderungsrechten ein.");
+    createProfileForm.querySelector("button[type='submit']").disabled = true;
+    setSyncMessage("JSONbin-Key fehlt. Gib den Key ein und drücke Verbinden.");
     renderProfiles();
     return;
   }

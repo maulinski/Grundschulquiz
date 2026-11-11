@@ -6,6 +6,7 @@
     <meta name="theme-color" content="#fff8e7" />
     <title>Grundschulquiz – Schlaukopf-Quiz</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="sync.css" />
     <script src="questions.js" defer></script>
     <script src="script.js" defer></script>
   </head>
@@ -18,20 +19,6 @@
           <h1>Schlaukopf-Quiz</h1>
           <p class="intro">Lege ein Profil an und starte das Quiz direkt dort.</p>
         </header>
-
-        <section class="panel sync-panel" aria-labelledby="sync-heading">
-          <h2 id="sync-heading">Geräte-Synchronisierung</h2>
-          <p>Gib einmalig pro Gerät den JSONbin Access Key ein. Verwende einen eingeschränkten Schlüssel mit Lese- und Änderungsrechten für den Quiz-Bin – nicht den Master Key.</p>
-          <form id="jsonbin-config-form">
-            <label class="input-label" for="jsonbin-access-key">JSONbin Access Key</label>
-            <div class="input-row">
-              <input id="jsonbin-access-key" class="player-input" type="password" autocomplete="off" required />
-              <button class="primary-button compact-button" type="submit">Verbinden</button>
-            </div>
-          </form>
-          <p id="sync-message" class="sync-message" role="status" aria-live="polite"></p>
-          <button id="sync-btn" class="secondary-button sync-refresh-button" type="button" disabled>Jetzt synchronisieren</button>
-        </section>
 
         <form id="create-profile-form" class="panel create-profile-panel">
           <label class="input-label" for="player-name">Neues Profil</label>
@@ -72,5 +59,14 @@
         </div>
       </section>
     </main>
+
+    <footer class="sync-dock" aria-label="Geräte-Synchronisierung">
+      <form id="jsonbin-config-form" class="sync-connect-form">
+        <input id="jsonbin-access-key" type="password" placeholder="JSONbin-Key" aria-label="JSONbin Access Key" autocomplete="off" required />
+        <button class="sync-action sync-connect-button" type="submit">Verbinden</button>
+      </form>
+      <button id="sync-btn" class="sync-action sync-refresh-button" type="button" disabled>Synchronisieren</button>
+      <span id="sync-message" class="visually-hidden" role="status" aria-live="polite"></span>
+    </footer>
   </body>
 </html>
