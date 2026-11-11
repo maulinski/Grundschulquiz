@@ -6,6 +6,7 @@
     <meta name="theme-color" content="#fff8e7" />
     <title>Grundschulquiz – Schlaukopf-Quiz</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="achievements.css" />
     <link rel="stylesheet" href="sync.css" />
     <script src="questions.js" defer></script>
     <script src="script.js" defer></script>
@@ -54,6 +55,7 @@
           <h2 id="result-title">Super gemacht!</h2>
           <p class="result-score" id="score-text"></p>
           <p class="result-message" id="result-message"></p>
+          <section id="round-achievement-progress" class="round-achievement-progress" aria-live="polite" aria-label="Erfolge-Fortschritt"></section>
           <button class="primary-button" id="restart-btn" type="button">Noch einmal spielen</button>
           <button class="primary-button" id="home-btn" type="button">Zurück zu den Profilen</button>
         </div>
@@ -62,7 +64,7 @@
 
     <footer class="sync-dock" aria-label="Geräte-Synchronisierung">
       <form id="jsonbin-config-form" class="sync-connect-form">
-        <input id="jsonbin-access-key" type="password" value="$2a$10$Po.yf8K9hxn7aSRuvrPtFOK6OMcXn6uIITG8hSoENstN208Q28H1G" placeholder="$2a$10$Po.yf8K9hxn7aSRuvrPtFOK6OMcXn6uIITG8hSoENstN208Q28H1G" aria-label="JSONbin Access Key" autocomplete="off" required />
+        <input id="jsonbin-access-key" type="password" value="$2a$10$Po.yf8K9hxn7aSRuvrPtFOK6OMcXn6uIITG8hSoENstN208Q28H1G" placeholder="JSONbin Access Key" autocomplete="off" aria-label="JSONbin Access Key" />
         <button class="sync-action sync-connect-button" type="submit">Verbinden</button>
       </form>
       <button id="sync-btn" class="sync-action sync-refresh-button" type="button" disabled>Synchronisieren</button>
