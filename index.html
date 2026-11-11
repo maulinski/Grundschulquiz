@@ -6,7 +6,6 @@
     <meta name="theme-color" content="#fff8e7" />
     <title>Grundschulquiz – Schlaukopf-Quiz</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="achievements.css" />
     <link rel="stylesheet" href="sync.css" />
     <script src="questions.js" defer></script>
     <script src="script.js" defer></script>
@@ -61,6 +60,15 @@
         </div>
       </section>
     </main>
+
+    <div id="achievement-modal" class="achievement-modal hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="achievement-modal-title">
+      <section class="achievement-dialog">
+        <button class="achievement-close-btn" type="button" aria-label="Erfolge schließen">×</button>
+        <p class="eyebrow">Dein Lernfortschritt</p>
+        <h2 id="achievement-modal-title">Erfolge</h2>
+        <div id="achievement-modal-content" class="achievement-list"></div>
+      </section>
+    </div>
 
     <footer class="sync-dock" aria-label="Geräte-Synchronisierung">
       <form id="jsonbin-config-form" class="sync-connect-form">
