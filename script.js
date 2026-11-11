@@ -50,7 +50,8 @@ function createProfile(name) {
     streak: 0,
     lastPlayedDate: "",
     totalRounds: 0,
-    lastResult: 0
+    lastResult: 0,
+    totalScore: 0
   };
 }
 
@@ -233,9 +234,9 @@ function renderProfiles() {
     const stats = document.createElement("div");
     stats.className = "profile-grid";
     stats.append(
-      makeStat("Serie", String(profile.streak || 0)),
-      makeStat("gespielte Runden", String(profile.totalRounds || 0)),
-      makeStat("Letztes Ergebnis", `${profile.lastResult ?? 0}/10`)
+      makeStat("Gespielte Runden", String(profile.totalRounds || 0)),
+      makeStat("Letztes Ergebnis", `${profile.lastResult ?? 0}/10`),
+      makeStat("Gesamtergebnis", `${profile.totalScore || 0}/${(profile.totalRounds || 0) * QUESTIONS_PER_ROUND}`)
     );
 
     const start = document.createElement("button");
@@ -263,7 +264,8 @@ function renderProfiles() {
           streak: 0,
           lastPlayedDate: "",
           totalRounds: 0,
-          lastResult: 0
+          lastResult: 0,
+          totalScore: 0
         }));
       } catch (error) {
         setSyncMessage(`Änderung fehlgeschlagen: ${error.message}`, true);
@@ -419,7 +421,8 @@ async function recordRoundResult() {
       streak,
       lastPlayedDate: today,
       totalRounds: (profile.totalRounds || 0) + 1,
-      lastResult: score
+      lastResult: score,
+      totalScore: (profile.totalScore || 0) + score
     };
   });
 }
