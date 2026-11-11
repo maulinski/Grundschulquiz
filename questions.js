@@ -169,7 +169,7 @@ window.questionPool = [
   { category: "Sport", question: "Welcher Sport wird auf einer Matte und mit einem Gürtel ausgeübt?", answers: ["Judo", "Klettern", "Golf", "Boxen"], correct: 0 },
   { category: "Sport", question: "Wie nennt man den Sport mit dem Fahrrad auf Straßen oder Bergen?", answers: ["Schwimmen", "Mountainbiking", "Laufen", "Reiten"], correct: 1 },
   { category: "Sport", question: "Welche Sportart hat einen Schläger und einen kleinen Ball?", answers: ["Tennis", "Fußball", "Handball", "Rugby"], correct: 0 },
-  { category: "Sport", question: "In welchem Wintersport fährt man auf einem Brett Schneebrettern fahren?", answers: ["Snowboard", "Biathlon", "Eisschnellauf", "Skispringen"], correct: 0 },
+  { category: "Sport", question: "In welchem Wintersport fährt man auf einem Brett?", answers: ["Biathlon", "Eisschnellauf", "Skispringen", "Snowboard"], correct: 3 },
   { category: "Sport", question: "Welcher Sport wird mit einer Klinge und einem Schutzanzug gespielt?", answers: ["Fechten", "Klettern", "Laufen", "Schwimmen"], correct: 0 },
   { category: "Sport", question: "Welches Land ist besonders bekannt für den Eissport?", answers: ["Kanada", "Brasilien", "Marokko", "Ägypten"], correct: 0 },
   { category: "Sport", question: "In welchem Sport kämpft man mit Fäusten in einem Ring?", answers: ["Boxen", "Squash", "Tennis", "Tontaubenschießen"], correct: 0 },
