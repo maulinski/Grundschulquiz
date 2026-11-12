@@ -3,7 +3,6 @@
 // Fragen aus questions.js können als vollständige Objekte hierher kopiert werden.
 // Erst ab 10 gültigen Fragen kann eine Vorbereitungsrunde gestartet werden.
 window.examQuestionPool = [
-  // [
   {
     category: "Wald",
     question: "Wie hoch werden Pflanzen in der Krautschicht meistens?",
@@ -114,6 +113,4 @@ window.examQuestionPool = [
     ],
     correct: 2
   }
-]
-
 ];
