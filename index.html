@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#fff8e7" />
     <title>Grundschulquiz – Schlaukopf-Quiz</title>
-    <link rel="stylesheet" href="style.css?v=achievements-3" />
-    <link rel="stylesheet" href="achievements.css?v=achievements-3" />
-    <link rel="stylesheet" href="achievement-presentation.css?v=achievements-3" />
+    <link rel="stylesheet" href="style.css?v=exam-1" />
+    <link rel="stylesheet" href="achievements.css?v=exam-1" />
+    <link rel="stylesheet" href="achievement-presentation.css?v=exam-1" />
+    <link rel="stylesheet" href="exam-quiz.css?v=exam-1" />
     <link rel="stylesheet" href="sync.css" />
-    <script src="questions.js" defer></script>
-    <script src="script.js?v=achievements-3" defer></script>
-    <script src="achievement-presentation.js?v=achievements-3" defer></script>
+    <script src="questions.js?v=exam-1" defer></script>
+    <script src="Pruefungsfragen.js?v=exam-1" defer></script>
+    <script src="script.js?v=exam-1" defer></script>
+    <script src="achievement-presentation.js?v=exam-1" defer></script>
+    <script src="exam-quiz.js?v=exam-1" defer></script>
   </head>
   <body>
     <main class="app">
@@ -33,6 +36,11 @@
         </form>
 
         <div id="profiles-list" class="profiles-list" aria-live="polite"></div>
+        <section class="exam-quiz-launch" aria-labelledby="exam-quiz-title">
+          <h2 id="exam-quiz-title">Vorbereitung für die nächste Probe</h2>
+          <p id="exam-quiz-availability" class="exam-quiz-availability" role="status" aria-live="polite"></p>
+          <button id="exam-quiz-start" class="primary-button" type="button" disabled>Vorbereitung für die nächste Probe</button>
+        </section>
       </section>
 
       <section id="quiz-screen" class="screen hidden">

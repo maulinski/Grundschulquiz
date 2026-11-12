@@ -1,0 +1,12 @@
+/* Separate launcher for the upcoming-probe preparation quiz. */
+.exam-quiz-launch {
+  margin-top: 24px;
+  padding: clamp(20px, 4vw, 28px);
+  border: 2px solid #f0d99c;
+  border-radius: 20px;
+  background: rgba(255, 252, 242, .95);
+  box-shadow: 0 9px 26px rgba(67, 55, 121, .08);
+}
+.exam-quiz-launch h2 { margin: 0; color: #5140b7; font-size: 1.3rem; }
+.exam-quiz-availability { margin: 8px 0 12px; color: #778198; font-size: .9rem; font-weight: 700; }
+#exam-quiz-start { margin-top: 0; }
