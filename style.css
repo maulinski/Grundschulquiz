@@ -135,7 +135,6 @@ h1 { margin: 0; font-size: clamp(2rem, 7vw, 3rem); line-height: 1.1; }
 .secondary-button:hover { border-color: var(--purple); background: #ede9ff; transform: translateY(-1px); }
 .delete-profile-button { border-color: #f0d2d2; background: #fff6f5; color: #a63d3d; }
 .delete-profile-button:hover { border-color: #d97777; background: #ffeded; }
-.legacy-controls { display: none !important; }
 
 .quiz-topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .category { padding: 6px 12px; border-radius: 999px; background: #f0edff; color: var(--purple-dark); font-size: .83rem; font-weight: 900; }
