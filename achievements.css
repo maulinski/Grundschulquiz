@@ -20,7 +20,6 @@
   margin: 22px 0 8px;
   text-align: left;
 }
-.achievement-panel-title { margin: 0 0 2px; color: #5140b7; font-size: 1.1rem; }
 .achievement-list { display: grid; gap: 12px; margin-top: 18px; }
 .achievement-card { padding: 14px 16px; border: 1px solid #e8e4fb; border-radius: 15px; background: #fbfaff; }
 .achievement-card-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
@@ -30,7 +29,6 @@
 .achievement-progress-track { height: 9px; overflow: hidden; border-radius: 99px; background: #eeedf4; }
 .achievement-progress-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #9a87fa, #6551d2); transition: width .25s ease; }
 .achievement-note { display: block; margin-top: 6px; color: #778198; font-size: .78rem; font-weight: 700; }
-.achievement-empty { margin: 0; color: #778198; text-align: center; }
 
 .achievement-modal {
   position: fixed;

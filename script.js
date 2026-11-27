@@ -91,7 +91,6 @@ const resultTitle = document.querySelector("#result-title");
 const scoreText = document.querySelector("#score-text");
 const resultMessage = document.querySelector("#result-message");
 const restartButton = document.querySelector("#restart-btn");
-const roundAchievementProgress = document.querySelector("#round-achievement-progress");
 const achievementModal = document.querySelector("#achievement-modal");
 const achievementModalTitle = document.querySelector("#achievement-modal-title");
 const achievementModalContent = document.querySelector("#achievement-modal-content");
@@ -638,29 +637,7 @@ async function recordRoundResult() {
   });
 }
 
-function renderRoundAchievements(profile) {
-  if (!profile || !roundAchievementProgress) return;
-  const achievements = getAchievementSummary(profile, 3);
-  roundAchievementProgress.replaceChildren();
-
-  if (achievements.length === 0) {
-    const empty = document.createElement("p");
-    empty.className = "achievement-empty";
-    empty.textContent = "Noch keine Erfolge erreicht.";
-    roundAchievementProgress.append(empty);
-    return;
-  }
-
-  const title = document.createElement("h3");
-  title.className = "achievement-panel-title";
-  title.textContent = "Erfolge kurz vorm Ziel";
-  roundAchievementProgress.append(title);
-
-  achievements.forEach((achievement) => {
-    roundAchievementProgress.append(renderAchievementCard(achievement));
-  });
-}
-
+// Result-screen renderer is provided by achievement-presentation.js.
 async function showResult() {
   try {
     await recordRoundResult();

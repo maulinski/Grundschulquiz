@@ -1,10 +1,20 @@
 # Grundschulquiz
-Ein Multiple Choice Quiz zur Allgemeinbildung für Grundschüler. Die Fragen stammen aus allen möglichen Kategorien.
 
-## JSONbin-Synchronisierung
+Multiple-Choice-Quiz für Grundschüler mit Profilen, Erfolgen und separater Prüfungsvorbereitung.
 
-Die Profile und Statistiken werden über den gemeinsamen JSONbin-Bin synchronisiert. Die Bedienelemente befinden sich einzeilig am unteren Bildschirmrand. Den JSONbin Access Key einmal pro Gerät in das Feld eintragen und **Verbinden** wählen; über **Synchronisieren** lassen sich die Daten später erneut laden.
+## Betrieb
 
-Verwende einen eingeschränkten Access Key mit Lese- und Änderungsrechten für den Quiz-Bin, keinen Master Key. Die App speichert ihn im lokalen Browserspeicher. Da dieses Repository öffentlich ist, wird der Schlüssel nicht in den Quellcode geschrieben. Auf einem neuen Browser/Gerät muss der Key einmal eingegeben werden.
+Statische Website auf GitHub Pages, ohne Build-Schritt. Als Online-Web-App über Safari zum Home-Bildschirm hinzufügbar. Keine Offline-Unterstützung.
 
-Der Bin muss das Format `{ "profiles": [] }` verwenden. Wenn er leer ist, importiert die App vorhandene lokale Profile vom Gerät, das zuerst verbindet. Bei gleichzeitigen Änderungen von mehreren Geräten kann eine Speicherung die andere überschreiben.
+## Dateien
+
+- `index.html`: Oberfläche und Einbindung der Skripte und Stylesheets.
+- `script.js`: normales Quiz, Profile, Erfolge und Synchronisierung.
+- `exam-quiz.js`: Prüfungsvorbereitung ohne Speicherung der Ergebnisse.
+- `achievement-presentation.js`: Ergebnisdarstellung der Erfolge.
+- `questions.js` / `Pruefungsfragen.js`: Fragenpools.
+- `manifest.json`, `pwa.js`, `service-worker.js`, Icons: Web-App.
+
+## JSONbin
+
+Profile werden gemeinsam in einem Bin mit dem Format `{ "profiles": [] }` gespeichert. Die aktuelle Konfiguration verbindet neue Geräte automatisch; der Schlüssel wird im lokalen Browserspeicher gespeichert. Ein eingeschränkter Access Key sollte ausschließlich die nötigen Rechte besitzen. Ein im öffentlichen Frontend hinterlegter Schlüssel ist für Dritte lesbar; keinen Master Key verwenden. Bei gleichzeitigen Änderungen auf mehreren Geräten können sich Speicherungen überschreiben. Ein leerer Bin kann beim Verbinden aus lokalen Profilen initialisiert werden.
